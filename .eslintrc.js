@@ -1,36 +1,38 @@
 module.exports = {
+  extends: ['standard', 'prettier'],
   env: {
+    es2021: true,
+    node: true,
     browser: true,
-    es2021: true
+    jest: true
   },
-  extends: ['airbnb', 'plugin:@typescript-eslint/recommended', 'prettier'],
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaVersion: 12,
-    sourceType: 'module'
-  },
-  settings: {
-    'import/resolver': {
-      node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx']
+  overrides: [
+    {
+      files: ['*.ts'],
+      extends: ['standard-with-typescript', 'prettier'],
+      parserOptions: {
+        project: './tsconfig.json'
+      }
+    },
+    {
+      files: ['*.tsx'],
+      extends: [
+        'standard-with-typescript',
+        'plugin:react/recommended',
+        'plugin:react-hooks/recommended',
+        'prettier'
+      ],
+      parserOptions: {
+        project: './tsconfig.json'
+      },
+      rules: {
+        'react/react-in-jsx-scope': 'off'
+      },
+      settings: {
+        react: {
+          version: 'latest'
+        }
       }
     }
-  },
-  plugins: ['@typescript-eslint'],
-  rules: {
-    'import/prefer-default-export': 'off',
-    'react/jsx-filename-extension': 'off',
-    'react/react-in-jsx-scope': 'off',
-    'no-use-before-define': 'off',
-    '@typescript-eslint/no-use-before-define': ['error'],
-    'import/extensions': [
-      'error',
-      'ignorePackages',
-      {
-        js: 'never',
-        ts: 'never',
-        tsx: 'never'
-      }
-    ]
-  }
+  ]
 }
