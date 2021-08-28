@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
 import { RootState } from '@/store'
 
 export type DueUnitType = 'day' | 'week' | 'month' | 'year'
@@ -23,8 +22,9 @@ export const dueUnitOptions: DueOptionType[] = [
 
 export interface NewTaskType {
   name: string
-  committedAt: string | null
+  committedAt: string
   due: DueType
+  roomId: number | null
 }
 
 export interface TaskType extends NewTaskType {

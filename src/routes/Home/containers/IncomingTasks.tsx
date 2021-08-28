@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 
 import { useAppSelector } from '@/hooks/store'
 import { selectTasks } from '@/store/task'
-
+import { TaskItem } from '@/components/TaskItem/TaskItem'
 import { Button } from '@/components/Button/Button'
 
 export const IncomingTasks = (): ReactElement => {
@@ -13,16 +13,13 @@ export const IncomingTasks = (): ReactElement => {
   return (
     <div>
       <section>
-        <h1>Tasks</h1>
-        <ul>
-          {tasks.map((task) => (
-            <li key={task.id}>
-              #{task.id} - {task.name}
-            </li>
-          ))}
-        </ul>
+        <h1>Incoming Tasks</h1>
 
-        <Button type="button" onClick={() => history.replace(`/task/new`)}>
+        {tasks.map((task) => (
+          <TaskItem key={task.id} task={task} />
+        ))}
+
+        <Button type="button" onClick={() => history.replace(`/new-task`)}>
           Create Task
         </Button>
       </section>
