@@ -1,8 +1,9 @@
 import { ReactElement, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useRouteMatch, useParams } from 'react-router-dom'
 import * as dayjs from 'dayjs'
 
-import { useAppDispatch } from '@/hooks/store'
+import { selectRooms } from '@/store/room'
+import { useAppDispatch, useAppSelector } from '@/hooks/store'
 import { NewTaskType, dueUnitOptions, addTask } from '@/store/task'
 import { Modal } from '@/components/Modal/Modal'
 import { TextInput } from '@/components/TextInput/TextInput'
@@ -17,38 +18,48 @@ interface CurrentStateType {
 
 const defaultTask: NewTaskType & CurrentStateType = {
   name: '',
-  committedAt: null,
+  committedAt: dayjs().toISOString(),
   due: {
     value: null,
     unit: 'day'
   },
-  currentState: null
+  currentState: null,
+  roomId: null
 }
 
 export const TaskAddEditModal = (): ReactElement => {
+  const rooms = useAppSelector(selectRooms)
   const dispatch = useAppDispatch()
+  const { roomId } = useParams<{ roomId: string }>()
   const history = useHistory()
+  const match = useRouteMatch()
 
   const [newTask, setNewTask] = useState(defaultTask)
 
   const handleCreateTask = (): void => {
     dispatch(
       addTask({
-        name: newTask.name,
-        committedAt: dayjs(newTask.committedAt).toISOString(),
-        due: {
-          ...newTask.due
-        }
+        ...newTask,
+        committedAt: dayjs(newTask.committedAt).toISOString()
       })
     )
   }
 
+  const closeModal = (): void => {
+    switch (match.path) {
+      case '/new-task':
+      case '/task/:taskId/edit':
+        history.replace('/')
+        break
+      case '/room/:roomId/new-task':
+      case '/room/:roomId/task/:taskId/edit':
+        history.replace(`/room/${roomId}`)
+        break
+    }
+  }
+
   return (
-    <Modal
-      onRequestClose={() => {
-        console.log('on requesting close...')
-      }}
-    >
+    <Modal onRequestClose={closeModal}>
       <>
         <div>TaskAddEditModal</div>
 
@@ -83,6 +94,21 @@ export const TaskAddEditModal = (): ReactElement => {
           }}
         />
 
+        <Select
+          placeholder="Room"
+          options={rooms.map(({ id, name }) => ({
+            value: String(id),
+            label: name
+          }))}
+          value={String(newTask.roomId)}
+          onChange={(value) => {
+            setNewTask((prev) => ({
+              ...prev,
+              roomId: Number(value)
+            }))
+          }}
+        />
+
         <DateInput
           placeholder="Last Cleaned"
           value={newTask?.committedAt ?? ''}
@@ -98,8 +124,8 @@ export const TaskAddEditModal = (): ReactElement => {
           type="button"
           onClick={() => {
             handleCreateTask()
-            history.replace('/')
             setNewTask(defaultTask)
+            closeModal()
           }}
         >
           Create Task

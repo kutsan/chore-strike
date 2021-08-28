@@ -7,7 +7,7 @@ import { RoomAddEditModal } from '@/containers/RoomAddEditModal/RoomAddEditModal
 import { Home } from '@/routes/Home/Home'
 import { Room } from '@/routes/Room/Room'
 import { Account } from '@/routes/Account/Account'
-import logo from '@/assets/logo.svg'
+import logoSvg from '@/assets/logo.svg'
 
 import './App.css'
 
@@ -15,7 +15,7 @@ export const App = (): ReactElement => {
   return (
     <>
       <header>
-        <img src={logo} alt="Logo" />
+        <img src={logoSvg} alt="Logo" />
         <h1>Chore Strike</h1>
       </header>
 
@@ -37,9 +37,9 @@ export const App = (): ReactElement => {
         <Route
           exact
           path={[
-            '/task/new',
+            '/new-task',
             '/task/:taskId/edit',
-            '/room/:roomId/task/new',
+            '/room/:roomId/new-task',
             '/room/:roomId/task/:taskId/edit'
           ]}
         >
@@ -50,7 +50,7 @@ export const App = (): ReactElement => {
           <TaskViewModal />
         </Route>
 
-        <Route exact path={['/room/new', '/room/:roomId/edit']}>
+        <Route exact path={['/new-room', '/room/:roomId/edit']}>
           <RoomAddEditModal />
         </Route>
       </Switch>
