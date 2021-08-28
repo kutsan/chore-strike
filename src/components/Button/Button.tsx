@@ -9,7 +9,6 @@ export const Button = ({
   children: string
   onClick: MouseEventHandler<HTMLButtonElement>
 }): ReactElement => (
-  // eslint-disable-next-line react/button-has-type
   <button type={type} onClick={onClick}>
     {children}
   </button>
