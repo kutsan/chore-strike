@@ -13,7 +13,7 @@ export const IncomingTasks = (): ReactElement => {
   return (
     <div>
       <section>
-        <h1>Incoming Tasks</h1>
+        <h1>Upcoming Chores</h1>
 
         {tasks.map((task) => (
           <TaskItem key={task.id} task={task} />
